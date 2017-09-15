@@ -1,13 +1,27 @@
 import http.server
 import freezer
 import socketserver
+from multiprocessing import Process
 
-PORT = 8000
+def f(name):
+    import subprocess
+    subprocess.call('socat -v tcp4-listen:2375,bind=127.0.0.1,reuseaddr,fork unix-connect:/var/run/docker.sock', shell=True)
 
-Handler = freezer.FreezerRequestHandler
+def l(name):
+    pass
 
-httpd = socketserver.TCPServer(("", PORT), Handler)
+if __name__ == '__main__':
+    # p = Process(target=f, args=('bob',))
+    # p.start()
 
-print("serving at port", PORT)
-httpd.serve_forever()
+
+    PORT = 8000
+
+    Handler = freezer.FreezerRequestHandler
+
+    httpd = socketserver.TCPServer(("", PORT), Handler)
+
+    print("serving at port", PORT)
+    httpd.serve_forever()
+    # p.join()
 
