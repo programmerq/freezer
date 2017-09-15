@@ -1,5 +1,8 @@
 # freezer
 
+![Freezer ascii art](freezer-asciiart.png "Freezer ascii art")
+
+
 ## Machine-readable support dumps
 
 Capture everything that the docker api will give you, and then save it to a file for further analysis. This captures raw API responses from the docker daemon that can be referred to later
