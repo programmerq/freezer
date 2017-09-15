@@ -1,53 +1,48 @@
 #!/bin/bash -x
-for API in 1.{17..32}; do
+for API in 1.24 1.30; do
 
     export DOCKER_API_VERSION=$API
 
-    docker info &
-    docker version &
+    /usr/local/bin/docker info &
+    /usr/local/bin/docker version &
     
-    for i in $(docker ps -aq); do
-        docker inspect $i &
-        docker logs $i 2>&1 > /dev/null &
+    for i in $(/usr/local/bin/docker ps -aq); do
+        gtimeout 1 /usr/local/bin/docker inspect $i
+        gtimeout 1 /usr/local/bin/docker logs --tail 10 $i 2>&1 > /dev/null
     done
-    wait
+#    wait
+
+    for i in $(/usr/local/bin/docker service ls -q); do
+        gtimeout 1 /usr/local/bin/docker service inspect $i
+        gtimeout 1 /usr/local/bin/docker service ps $i
+        gtimeout 1 /usr/local/bin/docker service logs --tail 10 $i 2>&1 > /dev/null
+    done
+#    wait
     
-    for i in $(docker ps --no-trunc -aq); do
-        docker inspect $i &
+    for i in $(/usr/local/bin/docker network ls -q); do
+        gtimeout 1 /usr/local/bin/docker network inspect $i
     done
-    wait
+#    wait
     
-    for i in $(docker service ls -q); do
-        docker service inspect $i &
-        docker service ps $i &
-        docker service logs $i 2>&1 > /dev/null &
+    for i in $(/usr/local/bin/docker volume ls -q); do
+        gtimeout 1 /usr/local/bin/docker volume inspect $i
     done
-    wait
+#    wait
     
-    for i in $(docker network ls -q); do
-        docker network inspect $i &
+    for i in $(/usr/local/bin/docker node ls -q); do
+        gtimeout 1 /usr/local/bin/docker node inspect $i
     done
-    wait
+#    wait
     
-    for i in $(docker volume ls -q); do
-        docker volume inspect $i &
+    for i in $(/usr/local/bin/docker secret ls -q); do
+        gtimeout 1 /usr/local/bin/docker secret inspect $i
     done
-    wait
+#    wait
     
-    for i in $(docker node ls -q); do
-        docker node inspect $i &
+    for i in $(/usr/local/bin/docker config ls -q); do
+        gtimeout 1 /usr/local/bin/docker config inspect $i
     done
-    wait
-    
-    for i in $(docker secret ls -q); do
-        docker secret inspect $i &
-    done
-    wait
-    
-    for i in $(docker config ls -q); do
-        docker config inspect $i &
-    done
-    wait
+#    wait
     
 done 
 

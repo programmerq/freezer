@@ -1,4 +1,4 @@
-import os
+import os, re
 import http.client
 import urllib.request
 
@@ -12,9 +12,9 @@ class FreezerRequestHandler(http.server.BaseHTTPRequestHandler):
             return
         print(os.getcwd())
         import subprocess
-        dir=(os.path.join(os.getcwd() + s.path))
+        dir=re.sub('\?.*$', '', (os.path.join(os.getcwd() + s.path)))
         file=os.path.join(dir, 'index.html')
-        print(file, dir)
+        # print(file, dir)
         subprocess.call("mkdir -p %s" % dir, shell=True)
         fh = open(file, 'wb')
         fh.write(response)
