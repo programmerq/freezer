@@ -1,9 +1,14 @@
 #!/bin/bash -x
+
+export TIMEOUT=$(which timeout || which gtimeout)
+export DOCKER=$(which docker)
+export TIMEOUT=/usr/local/bin/gtimeout
+export DOCKER=/usr/local/bin/docker
+
+
 for API in 1.24 1.30; do
 
     export DOCKER_API_VERSION=$API
-    export TIMEOUT=$(which timeout || which gtimeout)
-    export DOCKER=$(which docker)
 
     $DOCKER info &
     $DOCKER version &
